@@ -7,7 +7,14 @@ const (
 	DFS
 )
 
-func Visit(g Graph, visitType VisitType, visitNode func(Node), visitEdge func(Edge)) {
+type Visitor interface {
+	VisitNode(Node)
+	VisitEdge(Edge)
+}
+
+func Visit(g Graph, visitType VisitType, visitor Visitor) {
+	g.ResetVisited()
+
 	nodes := newDequeNode(g.GetRoot())
 
 	l := len(nodes)
@@ -16,12 +23,12 @@ func Visit(g Graph, visitType VisitType, visitNode func(Node), visitEdge func(Ed
 		var current Node
 
 		nodes, current = pop(nodes)
-		visitNode(current)
+		visitor.VisitNode(current)
 
 		current.MarkVisited()
 
 		for _, edge := range current.OutEdges() {
-			visitEdge(edge)
+			visitor.VisitEdge(edge)
 
 			if !edge.GetDst().IsVisited() {
 				if visitType == BFS {

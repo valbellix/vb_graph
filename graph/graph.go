@@ -14,6 +14,8 @@ type Graph interface {
 	AddEdge(from, to string, weight int) error
 
 	GetNode(label string) (Node, bool)
+
+	ResetVisited()
 }
 
 type adjGraph struct {
@@ -105,4 +107,10 @@ func (g *adjGraph) AddEdge(src, dst string, weight int) error {
 func (g *adjGraph) GetNode(label string) (Node, bool) {
 	n, ok := g.nodes[label]
 	return n, ok
+}
+
+func (g *adjGraph) ResetVisited() {
+	for _, n := range g.nodes {
+		n.ResetVisited()
+	}
 }
