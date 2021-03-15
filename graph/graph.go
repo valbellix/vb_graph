@@ -16,10 +16,6 @@ type Graph interface {
 	GetNode(label string) (Node, bool)
 }
 
-func Visit(g Graph) error {
-	return nil
-}
-
 type adjGraph struct {
 	root  *adjNode
 	nodes map[string]Node
