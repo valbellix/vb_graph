@@ -41,6 +41,23 @@ func (h *binaryHeap) swapElements(i, j int) {
 	h.array[j] = aux
 }
 
+func (h *binaryHeap) heapify(i int) {
+	leftIndex := h.leftChildIndex(i)
+	rightIndex := h.rightChildIndex(i)
+
+	upmostIndex := i
+	if leftIndex < len(h.array) && leftIsUp(h, h.array[leftIndex], h.array[upmostIndex]) {
+		upmostIndex = leftIndex
+	}
+	if rightIndex < len(h.array) && leftIsUp(h, h.array[rightIndex], h.array[upmostIndex]) {
+		upmostIndex = rightIndex
+	}
+	if upmostIndex != i {
+		h.swapElements(i, upmostIndex)
+		h.heapify(upmostIndex)
+	}
+}
+
 //////
 
 func (h *binaryHeap) Size() int {
@@ -81,8 +98,24 @@ func (h *binaryHeap) Push(element HeapElement) {
 }
 
 func (h *binaryHeap) Pop() HeapElement {
-	// TODO
-	return nil
+	if h.IsEmpty() {
+		return nil
+	}
+
+	top := h.array[0]
+	size := len(h.array)
+	if size == 1 {
+		// we are retaining the capacity to avoid reallocation later if we need to reuse
+		h.array = h.array[:0]
+		return top
+	}
+
+	// swap the root with the latest element of the array and heapify
+	h.array[0] = h.array[size-1]
+	h.array = h.array[:size-1]
+
+	h.heapify(0)
+	return top
 }
 
 func (h *binaryHeap) Remove(element HeapElement) {
