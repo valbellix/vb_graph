@@ -1,0 +1,29 @@
+package heap
+
+type HeapType int
+
+const (
+	MAX_HEAP HeapType = iota
+	MIN_HEAP
+)
+
+type HeapElement interface {
+	Priority() int
+}
+
+type Heap interface {
+	Size() int
+	Push(el HeapElement)
+	Pop() HeapElement
+	Remove(el HeapElement)
+	IsEmpty() bool
+	Type() HeapType
+}
+
+func leftIsUp(h Heap, elLeft, elRight HeapElement) bool {
+	if h.Type() == MIN_HEAP {
+		return elLeft.Priority() < elRight.Priority()
+	} else {
+		return elLeft.Priority() > elRight.Priority()
+	}
+}
