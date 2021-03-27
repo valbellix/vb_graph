@@ -117,7 +117,3 @@ func (h *binaryHeap) Pop() HeapElement {
 	h.heapify(0)
 	return top
 }
-
-func (h *binaryHeap) Remove(element HeapElement) {
-	// TODO
-}

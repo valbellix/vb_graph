@@ -15,7 +15,6 @@ type Heap interface {
 	Size() int
 	Push(el HeapElement)
 	Pop() HeapElement
-	Remove(el HeapElement)
 	IsEmpty() bool
 	Type() HeapType
 }
