@@ -9,6 +9,7 @@ const (
 
 type HeapElement interface {
 	Priority() int
+	SetPriority(p int)
 }
 
 type Heap interface {

@@ -15,6 +15,10 @@ func (t *testNode) Priority() int {
 	return t.priority
 }
 
+func (t *testNode) SetPriority(p int) {
+	t.priority = p
+}
+
 func TestMinHeap(t *testing.T) {
 	h := heap.NewBinaryHeap(heap.MIN_HEAP)
 
