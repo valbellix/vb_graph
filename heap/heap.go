@@ -18,6 +18,7 @@ type Heap interface {
 	Pop() HeapElement
 	IsEmpty() bool
 	Type() HeapType
+	MoveUp(el HeapElement, newPriority int) error
 }
 
 func leftIsUp(h Heap, elLeft, elRight HeapElement) bool {

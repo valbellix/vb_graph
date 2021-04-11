@@ -117,3 +117,31 @@ func (h *binaryHeap) Pop() HeapElement {
 	h.heapify(0)
 	return top
 }
+
+// it now scans the array... we need a map to efficiently handle this
+func (h *binaryHeap) getIndex(element HeapElement) (int, error) {
+	for i, v := range h.array {
+		if v.Priority() == element.Priority() {
+			return i, nil
+		}
+	}
+
+	return -1, errors.New("error: element is not in the heap")
+}
+
+func (h *binaryHeap) MoveUp(element HeapElement, newPriority int) error {
+	index, err := h.getIndex(element)
+	if err != nil {
+		return err
+	}
+
+	h.array[index].SetPriority(newPriority)
+	parent := int(math.Floor((float64(index - 1)) / 2))
+	for index > 0 && leftIsUp(h, h.array[index], h.array[parent]) {
+		h.swapElements(index, parent)
+		index = parent
+		parent = int(math.Floor((float64(index - 1)) / 2))
+	}
+
+	return nil
+}
