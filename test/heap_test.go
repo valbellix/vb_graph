@@ -36,20 +36,8 @@ func checkListContent(t *testing.T, expected, list []heap.HeapElement) {
 	}
 }
 
-func buildTestMinHeap() heap.Heap {
-	h := heap.NewBinaryHeap(heap.MIN_HEAP)
-
-	h.Push(&testNode{50})
-	h.Push(&testNode{1000})
-	h.Push(&testNode{100})
-	h.Push(&testNode{500})
-	h.Push(&testNode{700})
-
-	return h
-}
-
-func buildTestMaxHeap() heap.Heap {
-	h := heap.NewBinaryHeap(heap.MAX_HEAP)
+func buildTestHeap(t heap.HeapType) heap.Heap {
+	h := heap.NewBinaryHeap(t)
 
 	h.Push(&testNode{50})
 	h.Push(&testNode{1000})
@@ -61,7 +49,7 @@ func buildTestMaxHeap() heap.Heap {
 }
 
 func TestMinHeap(t *testing.T) {
-	h := buildTestMinHeap()
+	h := buildTestHeap(heap.MIN_HEAP)
 
 	assert.Equal(t, 5, h.Size())
 
@@ -82,7 +70,7 @@ func TestMinHeap(t *testing.T) {
 	}
 	checkListContent(t, expected, list)
 
-	h = buildTestMinHeap()
+	h = buildTestHeap(heap.MIN_HEAP)
 
 	err := h.MoveUp(&testNode{700}, 10)
 	assert.Nil(t, err, "error should not occur")
@@ -97,7 +85,7 @@ func TestMinHeap(t *testing.T) {
 }
 
 func TestMaxHeap(t *testing.T) {
-	h := buildTestMaxHeap()
+	h := buildTestHeap(heap.MAX_HEAP)
 
 	assert.Equal(t, 5, h.Size())
 
@@ -118,7 +106,7 @@ func TestMaxHeap(t *testing.T) {
 	}
 	checkListContent(t, expected, list)
 
-	h = buildTestMaxHeap()
+	h = buildTestHeap(heap.MAX_HEAP)
 
 	err := h.MoveUp(&testNode{100}, 1500)
 	assert.Nil(t, err, "error should not occur")
