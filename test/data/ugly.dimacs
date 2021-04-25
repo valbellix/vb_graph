@@ -1,0 +1,4 @@
+p edge 100 100
+e a b 1
+e a c 1
+e b d 1
