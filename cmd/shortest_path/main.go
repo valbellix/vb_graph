@@ -14,7 +14,11 @@ func makeTimestamp() int64 {
 
 func main() {
 	var file string
+	var edgeMarker string
 	flag.StringVar(&file, "file", "", "path to a valid DIMACS file")
+	flag.StringVar(&edgeMarker, "marker", "e", "edge marker")
+
+	flag.Parse()
 
 	if file == "" {
 		fmt.Println("File is not specified")
@@ -29,7 +33,7 @@ func main() {
 	fmt.Println("Parsing the graph from a DIMACS file")
 	beginning := makeTimestamp()
 
-	g, err := graph.ParseDIMACS(file, "e")
+	g, err := graph.ParseDIMACS(file, edgeMarker)
 	end := makeTimestamp()
 	if err != nil {
 		fmt.Println(err)
