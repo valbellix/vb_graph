@@ -40,6 +40,7 @@ func main() {
 		return
 	}
 	fmt.Printf("Building the graph took %v ms\n", (end - beginning))
+	fmt.Printf("The graph has %v nodes and %v edges.", len(g.Nodes()), len(g.Edges()))
 
 	beginning = makeTimestamp()
 	_, _, err = graph.ShortestPath(g, g.GetRoot())
