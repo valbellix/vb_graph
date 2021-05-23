@@ -3,7 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
+	"runtime/pprof"
 	"time"
 	"vb_graph/graph"
 )
@@ -15,10 +17,23 @@ func makeTimestamp() int64 {
 func main() {
 	var file string
 	var edgeMarker string
+	var cpuprofile string
+
 	flag.StringVar(&file, "file", "", "path to a valid DIMACS file")
 	flag.StringVar(&edgeMarker, "marker", "e", "edge marker")
+	flag.StringVar(&cpuprofile, "cpuprofile", "", "write cpu profile to file")
 
 	flag.Parse()
+
+	if cpuprofile != "" {
+		f, err := os.Create(cpuprofile)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
+	}
 
 	if file == "" {
 		fmt.Println("File is not specified")

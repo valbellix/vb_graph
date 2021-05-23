@@ -6,8 +6,9 @@ import (
 )
 
 func initDistances(g Graph, n Node) map[Node]int {
-	m := make(map[Node]int)
-	for _, current := range g.Nodes() {
+	nodes := g.Nodes()
+	m := make(map[Node]int, len(nodes))
+	for _, current := range nodes {
 		m[current] = math.MaxInt64
 	}
 
@@ -15,8 +16,9 @@ func initDistances(g Graph, n Node) map[Node]int {
 }
 
 func initPrevious(g Graph) map[Node]Node {
-	m := make(map[Node]Node)
-	for _, current := range g.Nodes() {
+	nodes := g.Nodes()
+	m := make(map[Node]Node, len(nodes))
+	for _, current := range nodes {
 		m[current] = nil
 	}
 
