@@ -20,11 +20,3 @@ type Heap interface {
 	Type() HeapType
 	MoveUp(el HeapElement, newPriority int) error
 }
-
-func leftIsUp(h Heap, elLeft, elRight HeapElement) bool {
-	if h.Type() == MIN_HEAP {
-		return elLeft.Priority() < elRight.Priority()
-	} else {
-		return elLeft.Priority() > elRight.Priority()
-	}
-}

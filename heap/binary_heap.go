@@ -8,13 +8,26 @@ import (
 type binaryHeap struct {
 	array    []HeapElement
 	heapType HeapType
+	leftIsUp func(HeapElement, HeapElement) bool
 }
 
 func NewBinaryHeap(t HeapType) Heap {
-	return &binaryHeap{
+	h := &binaryHeap{
 		array:    []HeapElement{},
 		heapType: t,
 	}
+
+	if t == MIN_HEAP {
+		h.leftIsUp = func(l, r HeapElement) bool {
+			return l.Priority() < r.Priority()
+		}
+	} else {
+		h.leftIsUp = func(l, r HeapElement) bool {
+			return l.Priority() > r.Priority()
+		}
+	}
+
+	return h
 }
 
 //////
@@ -46,10 +59,10 @@ func (h *binaryHeap) heapify(i int) {
 	rightIndex := h.rightChildIndex(i)
 
 	upmostIndex := i
-	if leftIndex < len(h.array) && leftIsUp(h, h.array[leftIndex], h.array[upmostIndex]) {
+	if leftIndex < len(h.array) && h.leftIsUp(h.array[leftIndex], h.array[upmostIndex]) {
 		upmostIndex = leftIndex
 	}
-	if rightIndex < len(h.array) && leftIsUp(h, h.array[rightIndex], h.array[upmostIndex]) {
+	if rightIndex < len(h.array) && h.leftIsUp(h.array[rightIndex], h.array[upmostIndex]) {
 		upmostIndex = rightIndex
 	}
 	if upmostIndex != i {
@@ -85,7 +98,7 @@ func (h *binaryHeap) Push(element HeapElement) {
 	}
 
 	parentElement := h.array[parent]
-	for leftIsUp(h, element, parentElement) {
+	for h.leftIsUp(element, parentElement) {
 		h.swapElements(current, parent)
 
 		current = parent
@@ -137,7 +150,7 @@ func (h *binaryHeap) MoveUp(element HeapElement, newPriority int) error {
 
 	h.array[index].SetPriority(newPriority)
 	parent := int(math.Floor((float64(index - 1)) / 2))
-	for index > 0 && leftIsUp(h, h.array[index], h.array[parent]) {
+	for index > 0 && h.leftIsUp(h.array[index], h.array[parent]) {
 		h.swapElements(index, parent)
 		index = parent
 		parent = int(math.Floor((float64(index - 1)) / 2))
