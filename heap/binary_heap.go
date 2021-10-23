@@ -30,6 +30,14 @@ func NewBinaryHeap(t HeapType) Heap {
 	return h
 }
 
+func NewBinaryMinHeap() Heap {
+	return NewBinaryHeap(MIN_HEAP)
+}
+
+func NewBinaryMaxHeap() Heap {
+	return NewBinaryHeap(MAX_HEAP)
+}
+
 //////
 // These functions will be helpful to manage trees implemented as a vector-like structure
 
@@ -154,6 +162,17 @@ func (h *binaryHeap) MoveUp(element HeapElement, newPriority int) error {
 		h.swapElements(index, parent)
 		index = parent
 		parent = int(math.Floor((float64(index - 1)) / 2))
+	}
+
+	return nil
+}
+
+func (h *binaryHeap) Merge(anotherHeap Heap) error {
+	if h.Type() != anotherHeap.Type() {
+		return errors.New("the heap to merge is of a different type")
+	}
+	for !anotherHeap.IsEmpty() {
+		h.Push(anotherHeap.Pop())
 	}
 
 	return nil

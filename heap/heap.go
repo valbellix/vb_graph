@@ -19,4 +19,5 @@ type Heap interface {
 	IsEmpty() bool
 	Type() HeapType
 	MoveUp(el HeapElement, newPriority int) error
+	Merge(h Heap) error
 }

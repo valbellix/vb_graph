@@ -82,6 +82,23 @@ func TestMinHeap(t *testing.T) {
 	}
 
 	checkListContent(t, expected, list)
+
+	h1 := heap.NewBinaryMinHeap()
+	h1.Push(&testNode{10})
+	h1.Push(&testNode{500})
+	h1.Push(&testNode{1000})
+
+	h2 := heap.NewBinaryMinHeap()
+	h2.Push(&testNode{50})
+	h2.Push(&testNode{100})
+
+	err = h1.Merge(h2)
+	assert.Nil(t, err, "error should not occur")
+	assert.Equal(t, 5, h1.Size(), "size should be sum of h1+h2")
+	assert.True(t, h2.IsEmpty(), true, "h2 should be empty")
+
+	list = makeAListOfHeapElements(h1)
+	checkListContent(t, expected, list)
 }
 
 func TestMaxHeap(t *testing.T) {
@@ -116,5 +133,22 @@ func TestMaxHeap(t *testing.T) {
 	expected = []heap.HeapElement{
 		&testNode{1500}, &testNode{1000}, &testNode{700}, &testNode{500}, &testNode{50},
 	}
+	checkListContent(t, expected, list)
+
+	h1 := heap.NewBinaryMaxHeap()
+	h1.Push(&testNode{1500})
+	h1.Push(&testNode{500})
+	h1.Push(&testNode{50})
+
+	h2 := heap.NewBinaryMaxHeap()
+	h1.Push(&testNode{1000})
+	h1.Push(&testNode{700})
+
+	err = h1.Merge(h2)
+	assert.Nil(t, err, "error should not occur")
+	assert.Equal(t, 5, h1.Size(), "size should be sum of h1+h2")
+	assert.True(t, h2.IsEmpty(), true, "h2 should be empty")
+
+	list = makeAListOfHeapElements(h1)
 	checkListContent(t, expected, list)
 }
