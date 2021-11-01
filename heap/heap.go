@@ -21,3 +21,11 @@ type Heap interface {
 	MoveUp(el HeapElement, newPriority int) error
 	Merge(h Heap) error
 }
+
+func minHeapCmp(l, r HeapElement) bool {
+	return l.Priority() < r.Priority()
+}
+
+func maxHeapCmp(l, r HeapElement) bool {
+	return l.Priority() > r.Priority()
+}

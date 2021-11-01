@@ -18,13 +18,9 @@ func NewBinaryHeap(t HeapType) Heap {
 	}
 
 	if t == MIN_HEAP {
-		h.leftIsUp = func(l, r HeapElement) bool {
-			return l.Priority() < r.Priority()
-		}
+		h.leftIsUp = minHeapCmp
 	} else {
-		h.leftIsUp = func(l, r HeapElement) bool {
-			return l.Priority() > r.Priority()
-		}
+		h.leftIsUp = maxHeapCmp
 	}
 
 	return h
