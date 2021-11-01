@@ -114,6 +114,14 @@ func (h *binaryHeap) Push(element HeapElement) {
 	}
 }
 
+func (h *binaryHeap) Peek() HeapElement {
+	if h.IsEmpty() {
+		return nil
+	}
+
+	return h.array[0]
+}
+
 func (h *binaryHeap) Pop() HeapElement {
 	if h.IsEmpty() {
 		return nil

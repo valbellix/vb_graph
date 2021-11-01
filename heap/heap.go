@@ -16,6 +16,7 @@ type Heap interface {
 	Size() int
 	Push(el HeapElement)
 	Pop() HeapElement
+	Peek() HeapElement
 	IsEmpty() bool
 	Type() HeapType
 	MoveUp(el HeapElement, newPriority int) error
