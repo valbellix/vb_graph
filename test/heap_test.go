@@ -7,6 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type HeapFamily int
+
+const (
+	BINARY_HEAP HeapFamily = iota
+	BINOMIAL_HEAP
+)
+
 type testNode struct {
 	priority int
 }
@@ -36,8 +43,13 @@ func checkListContent(t *testing.T, expected, list []heap.HeapElement) {
 	}
 }
 
-func buildTestHeap(t heap.HeapType) heap.Heap {
-	h := heap.NewBinaryHeap(t)
+func buildTestHeap(f HeapFamily, t heap.HeapType) heap.Heap {
+	var h heap.Heap
+	if f == BINARY_HEAP {
+		h = heap.NewBinaryHeap(t)
+	} else if f == BINOMIAL_HEAP {
+		h = heap.NewBinomialHeap(t)
+	}
 
 	h.Push(&testNode{50})
 	h.Push(&testNode{1000})
@@ -48,8 +60,35 @@ func buildTestHeap(t heap.HeapType) heap.Heap {
 	return h
 }
 
-func TestMinHeap(t *testing.T) {
-	h := buildTestHeap(heap.MIN_HEAP)
+func buildEmptyHeap(f HeapFamily, t heap.HeapType) heap.Heap {
+	var h heap.Heap
+	if f == BINARY_HEAP {
+		h = heap.NewBinaryHeap(t)
+	} else if f == BINOMIAL_HEAP {
+		h = heap.NewBinomialHeap(t)
+	}
+
+	return h
+}
+
+func TestMinBinaryHeap(t *testing.T) {
+	testMinHeap(t, BINARY_HEAP)
+}
+
+func TestMinBinomialHeap(t *testing.T) {
+	testMinHeap(t, BINOMIAL_HEAP)
+}
+
+func TestMaxBinaryHeap(t *testing.T) {
+	testMaxHeap(t, BINARY_HEAP)
+}
+
+func TestMaxBinomialHeap(t *testing.T) {
+	testMaxHeap(t, BINOMIAL_HEAP)
+}
+
+func testMinHeap(t *testing.T, family HeapFamily) {
+	h := buildTestHeap(family, heap.MIN_HEAP)
 
 	assert.Equal(t, 5, h.Size())
 
@@ -70,7 +109,7 @@ func TestMinHeap(t *testing.T) {
 	}
 	checkListContent(t, expected, list)
 
-	h = buildTestHeap(heap.MIN_HEAP)
+	h = buildTestHeap(family, heap.MIN_HEAP)
 
 	err := h.MoveUp(&testNode{700}, 10)
 	assert.Nil(t, err, "error should not occur")
@@ -83,12 +122,12 @@ func TestMinHeap(t *testing.T) {
 
 	checkListContent(t, expected, list)
 
-	h1 := heap.NewBinaryMinHeap()
+	h1 := buildEmptyHeap(family, heap.MIN_HEAP)
 	h1.Push(&testNode{10})
 	h1.Push(&testNode{500})
 	h1.Push(&testNode{1000})
 
-	h2 := heap.NewBinaryMinHeap()
+	h2 := buildEmptyHeap(family, heap.MIN_HEAP)
 	h2.Push(&testNode{50})
 	h2.Push(&testNode{100})
 
@@ -101,8 +140,8 @@ func TestMinHeap(t *testing.T) {
 	checkListContent(t, expected, list)
 }
 
-func TestMaxHeap(t *testing.T) {
-	h := buildTestHeap(heap.MAX_HEAP)
+func testMaxHeap(t *testing.T, family HeapFamily) {
+	h := buildTestHeap(family, heap.MAX_HEAP)
 
 	assert.Equal(t, 5, h.Size())
 
@@ -123,7 +162,7 @@ func TestMaxHeap(t *testing.T) {
 	}
 	checkListContent(t, expected, list)
 
-	h = buildTestHeap(heap.MAX_HEAP)
+	h = buildTestHeap(family, heap.MAX_HEAP)
 
 	err := h.MoveUp(&testNode{100}, 1500)
 	assert.Nil(t, err, "error should not occur")
@@ -135,12 +174,12 @@ func TestMaxHeap(t *testing.T) {
 	}
 	checkListContent(t, expected, list)
 
-	h1 := heap.NewBinaryMaxHeap()
+	h1 := buildEmptyHeap(family, heap.MAX_HEAP)
 	h1.Push(&testNode{1500})
 	h1.Push(&testNode{500})
 	h1.Push(&testNode{50})
 
-	h2 := heap.NewBinaryMaxHeap()
+	h2 := buildEmptyHeap(family, heap.MAX_HEAP)
 	h1.Push(&testNode{1000})
 	h1.Push(&testNode{700})
 
