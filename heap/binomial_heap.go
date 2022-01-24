@@ -41,6 +41,7 @@ type BinomialHeap struct {
 	leftIsUp func(l, r HeapElement) bool
 	cmp      func(l, r int) bool
 	numEl    int
+	nodeMap  map[int]*binomialTreeNode
 }
 
 func NewBinomialHeap(heapType HeapType) *BinomialHeap {
@@ -48,6 +49,7 @@ func NewBinomialHeap(heapType HeapType) *BinomialHeap {
 		head:     nil,
 		heapType: heapType,
 		numEl:    0,
+		nodeMap:  make(map[int]*binomialTreeNode),
 	}
 
 	if heapType == MIN_HEAP {
@@ -179,7 +181,7 @@ func (h *BinomialHeap) union(heap *BinomialHeap) *binomialTreeNode {
 	return r
 }
 
-func (h *BinomialHeap) getTop(delete bool) HeapElement {
+func (h *BinomialHeap) getTop(del bool) HeapElement {
 	if h.head == nil {
 		return nil
 	}
@@ -204,9 +206,10 @@ func (h *BinomialHeap) getTop(delete bool) HeapElement {
 		current = current.sibling
 	}
 
-	if delete {
+	if del {
 		h.removeRoot(toRemove, toRemovePrev)
 		h.numEl--
+		delete(h.nodeMap, element.Priority())
 	}
 	return element
 }
@@ -226,6 +229,7 @@ func (h *BinomialHeap) Push(el HeapElement) {
 
 	h.head = h.union(hp)
 	h.numEl++
+	h.nodeMap[el.Priority()] = t
 }
 
 func (h *BinomialHeap) Size() int {
@@ -241,8 +245,28 @@ func (h *BinomialHeap) IsEmpty() bool {
 }
 
 func (h *BinomialHeap) MoveUp(el HeapElement, newPriority int) error {
-	// TODO
-	return errors.New("not implemented")
+	// TODO check if the new priority is consistent with the heap type
+	ptr, ok := h.nodeMap[el.Priority()]
+	if !ok {
+		return errors.New("no such element")
+	}
+
+	delete(h.nodeMap, el.Priority())
+	ptr.element.SetPriority(newPriority)
+	parent := ptr.parent
+	for (parent != nil) && (h.leftIsUp(parent.element, ptr.element)) {
+		// swap with its parent
+		parentElement := parent.element
+		parent.element = ptr.element
+		ptr.element = parentElement
+
+		h.nodeMap[parent.element.Priority()] = ptr
+
+		ptr = parent
+		parent = ptr.parent
+	}
+	h.nodeMap[newPriority] = ptr
+	return nil
 }
 
 func (h *BinomialHeap) Merge(anotherHeap Heap) error {
