@@ -245,7 +245,16 @@ func (h *BinomialHeap) IsEmpty() bool {
 }
 
 func (h *BinomialHeap) MoveUp(el HeapElement, newPriority int) error {
-	// TODO check if the new priority is consistent with the heap type
+	isErr := false
+	if h.heapType == MIN_HEAP {
+		isErr = newPriority > el.Priority()
+	} else {
+		isErr = newPriority < el.Priority()
+	}
+	if isErr {
+		return errors.New("cannot perform a move up operation on the selected element")
+	}
+
 	ptr, ok := h.nodeMap[el.Priority()]
 	if !ok {
 		return errors.New("no such element")
@@ -254,7 +263,7 @@ func (h *BinomialHeap) MoveUp(el HeapElement, newPriority int) error {
 	delete(h.nodeMap, el.Priority())
 	ptr.element.SetPriority(newPriority)
 	parent := ptr.parent
-	for (parent != nil) && (h.leftIsUp(parent.element, ptr.element)) {
+	for (parent != nil) && (h.leftIsUp(ptr.element, parent.element)) {
 		// swap with its parent
 		parentElement := parent.element
 		parent.element = ptr.element
@@ -270,6 +279,12 @@ func (h *BinomialHeap) MoveUp(el HeapElement, newPriority int) error {
 }
 
 func (h *BinomialHeap) Merge(anotherHeap Heap) error {
-	// TODO
-	return errors.New("not implemented")
+	if h.Type() != anotherHeap.Type() {
+		return errors.New("the heap to merge is of a different type")
+	}
+
+	for !anotherHeap.IsEmpty() {
+		h.Push(anotherHeap.Pop())
+	}
+	return nil
 }
