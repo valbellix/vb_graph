@@ -1,15 +1,12 @@
 package graph
 
-import (
-	"math"
-	"vb_graph/heap"
-)
+import "vb_graph/heap"
 
 func initDistances(g Graph, n Node) map[Node]int {
 	nodes := g.Nodes()
 	m := make(map[Node]int, len(nodes))
 	for _, current := range nodes {
-		m[current] = math.MaxInt64
+		m[current] = heap.MAXINT
 	}
 
 	return m

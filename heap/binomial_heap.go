@@ -1,9 +1,6 @@
 package heap
 
-import (
-	"errors"
-	"math"
-)
+import "errors"
 
 type binomialTreeNode struct {
 	element HeapElement
@@ -186,9 +183,9 @@ func (h *BinomialHeap) getTop(del bool) HeapElement {
 		return nil
 	}
 
-	top := math.MaxInt64
+	top := MAXINT
 	if h.heapType == MAX_HEAP {
-		top = math.MinInt64
+		top = MININT
 	}
 
 	current := h.head
