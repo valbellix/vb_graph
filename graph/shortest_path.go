@@ -35,11 +35,10 @@ func (n *nodeHolder) SetPriority(p int) {
 	n.distance = p
 }
 
-func ShortestPath(g Graph, n Node) (map[Node]int, map[Node]Node, error) {
+func ShortestPath(g Graph, n Node, h heap.Heap) (map[Node]int, map[Node]Node, error) {
 	distance := initDistances(g, n)
 	previous := initPrevious(g)
 
-	h := heap.NewBinaryHeap(heap.MIN_HEAP)
 	h.Push(&nodeHolder{n, 0})
 	distance[n] = 0
 

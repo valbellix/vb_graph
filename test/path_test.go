@@ -3,6 +3,7 @@ package test
 import (
 	"testing"
 	"vb_graph/graph"
+	"vb_graph/heap"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -49,15 +50,23 @@ func buildExpectedPrevious() map[string]string {
 	return m
 }
 
-func TestShortestPath(t *testing.T) {
+func testShortestPath(t *testing.T, h heap.Heap) {
 	g, err := graph.ParseDIMACS("data/test_path.dimacs", "e")
 	assert.Nil(t, err, "ParseDIMACS should not return any error")
 
-	distances, previous, err := graph.ShortestPath(g, g.GetRoot())
+	distances, previous, err := graph.ShortestPath(g, g.GetRoot(), h)
 	assert.Nil(t, err)
 	assert.NotZero(t, len(distances), "distances should not be empty")
 	assert.NotZero(t, len(previous), "previous should not be empty")
 
 	assert.Equal(t, buildExpectedDistances(), buildDistToVerify(distances), "expected distances should match to the expected")
 	assert.Equal(t, buildExpectedPrevious(), buildPrevToVerify(previous), "expected previous should be match the expected")
+}
+
+func TestShortestPathBinary(t *testing.T) {
+	testShortestPath(t, heap.NewBinaryMinHeap())
+}
+
+func TestShortestPathBinomial(t *testing.T) {
+	testShortestPath(t, heap.NewBinomialMinHeap())
 }
